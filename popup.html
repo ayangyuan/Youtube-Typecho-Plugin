@@ -1,0 +1,56 @@
+<script type="text/javascript">
+	$(function(){
+		if($('#wmd-button-row').length>0)
+			$('#wmd-button-row').append('<li class="wmd-button" id="wmd-youtube-button" style="font-size:14px;float:left;color:#AAA;width:48px;line-height:20px;" title="Embed Youtube">Y<sml style="font-size:12px;">outube</sml></li>');
+		else
+	 		$('#text').before('<a href="#" id="wmd-youtube-button" title="Embed Youtebe">Youtube</a>');
+
+	 	$(document).on('click', '#wmd-youtube-button', function(){
+	 		var bgwidth = (document.body.className == 'fullscreen') ? '200%' : '100%';
+	 		$(this).after(
+	 			'<div class="wmd-prompt-dialog"><div><p><b>Embed your youtube</b></p><p>youtube url like: </div><form><input type="text" name="youtube_url"><br>Width: <input name="width" value="560" size="1"/>&nbsp;&nbsp;Height: <input name="height" value="315" size="1"/><br><br><button type="button" class="btn-s primary" onclick="embedyoutube(this);">Submit</button><button type="button" class="btn-s" onclick="rm2();">Cancel</button></form></div>');
+
+	 	})
+
+	 	// Remove popup
+	 	if(($('.wmd-prompt-dialog').length != 0) && e.keyCode == '27') {
+			rm2();
+		}
+	})
+
+	function embedyoutube(e){
+		$form = $(e).closest('form');
+		url = $.trim($form.find('input[name="youtube_url"]').val());
+		width = $form.find('[name=width]').val() || 640;
+		height = $form.find('[name=height]').val() || 480;
+		url = getembedyoutube(url);
+		if(url == ''){
+			alert('Youtube url, please');
+		}else{
+		        if(url == 'error') {
+				alert('Cannot recognize Youtube url. :(');
+			}else{
+				setHTML(url,width,height);
+				rm2();
+			}
+		}
+	}
+
+	function setHTML(r,w,h){
+		var html = '<iframe width="'+w+'" height="'+h+'" src="'+r+'" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen class="youtube"></iframe>';
+		var t = $('#text');
+		t.val(t.val()+html);
+		rm2();
+	}
+
+	function rm2() {
+		$('.wmd-prompt-dialog').remove()
+	}
+
+	function getembedyoutube(url) {
+    		var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    		var match = url.match(regExp);
+    		if (match && match[2].length == 11) { return '//www.youtube.com/embed/'+match[2]; } else { return 'error'; }
+	}
+
+</script>
