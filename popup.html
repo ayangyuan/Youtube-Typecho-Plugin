@@ -23,12 +23,12 @@
 		url = $.trim($form.find('input[name="youtube_url"]').val());
 		width = $form.find('[name=width]').val() || 640;
 		height = $form.find('[name=height]').val() || 480;
-		url = getembedyoutube(url);
+		url = getembedvideo(url);
 		if(url == ''){
-			alert('Youtube url, please');
+			alert('Youtube or Vimeo url, please');
 		}else{
 		        if(url == 'error') {
-				alert('Cannot recognize Youtube url. :(');
+				alert('Cannot recognize Youtube or Vimeo url. :(');
 			}else{
 				setHTML(url,width,height);
 				rm2();
@@ -46,7 +46,16 @@
 	function rm2() {
 		$('.wmd-prompt-dialog').remove()
 	}
-
+	function getembedvideo(url){
+                rest = getembedyoutube(url);
+                if (rest == 'error') {rest = getembedvimeo(url);}
+                return rest;
+        }
+	function getembedvimeo(url) {
+    		var regExp = /^.*(vimeo.com\/)([^\/]*).*/;
+    		var match = url.match(regExp);
+    		if (match && match[2].length == 9) { return '//player.vimeo.com/video/'+match[2]; } else { return 'error'; }
+	}
 	function getembedyoutube(url) {
     		var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     		var match = url.match(regExp);
